@@ -1,0 +1,23 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:DavidvanErkelens/SiteFramework.git"
+        },
+
+        {
+            "type": "vcs",
+            "url": "git@github.com:DavidvanErkelens/SqlFramework.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:DavidvanErkelens/AutoIncluder.git"
+        }
+    ],
+     "require": {
+        "DavidvanErkelens/SiteFramework": "master@dev",
+        "DavidvanErkelens/SqlFramework": "master@dev",
+        "DavidvanErkelens/AutoIncluder": "master@dev",
+        "guzzlehttp/guzzle": "~6.0"
+    }
+}

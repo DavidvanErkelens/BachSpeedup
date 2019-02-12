@@ -1,0 +1,1 @@
+{"columns":[{"name":"id","type":"int","null":false,"auto_increment":true},{"name":"name","type":"text","null":false}],"primary":"id"}

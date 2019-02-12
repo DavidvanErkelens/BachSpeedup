@@ -1,0 +1,1 @@
+{"columns":[{"name":"id","type":"int","null":false,"auto_increment":true},{"name":"name","type":"varchar(255)","null":false},{"name":"discogs_id","type":"int","null":false,"default":0}],"primary":"id"}

@@ -1,0 +1,1 @@
+{"columns":[{"name":"id","type":"int","null":false,"auto_increment":true},{"name":"fk_work","type":"int","null":false},{"name":"fk_release","type":"int","null":false},{"name":"trackrange","type":"varchar(255)","null":false}],"primary":"id"}

@@ -1,0 +1,1 @@
+{"columns":[{"name":"id","type":"int","null":false,"auto_increment":true},{"name":"fk_release","type":"int","null":false},{"name":"duration","type":"varchar(255)","null":false},{"name":"position","type":"varchar(255)","null":false},{"name":"type","type":"varchar(255)","null":false},{"name":"title","type":"varchar(255)","null":false}],"primary":"id"}
