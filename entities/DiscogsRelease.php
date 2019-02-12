@@ -21,6 +21,16 @@ class DiscogsRelease extends Entity
     }
 
     /**
+     *  Get the year of the release
+     *  @return int
+     */
+    public function year(): int
+    {
+        // expose member
+        return $this->row->year;
+    }
+
+    /**
      *  Add a track to this release
      *  @param  string      the duration
      *  @param  string      the position

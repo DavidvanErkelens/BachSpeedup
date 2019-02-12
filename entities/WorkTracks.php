@@ -108,6 +108,9 @@ class WorkTracks extends Entity
         // Get the seconds
         $seconds = intval(round(60 * ($duration - $minutes)));
 
+        // Format
+        $seconds = str_pad((string) $seconds, 2, '0', STR_PAD_LEFT);
+
         // Format string
         return "{$minutes}:{$seconds}";
     }
