@@ -51,4 +51,36 @@ class DiscogsReleaseCollection extends Collection
         // Allow chaining
         return $this;
     }
+
+    /**
+     *  Filter releases that are already tagged for a certain work
+     *  @param  Work
+     *  @param  boolean
+     *  @param  boolean
+     *  @return DiscogsReleaseCollection
+     */
+    public function taggedForWork(Work $work, bool $tagged = true, bool $skip = false): DiscogsReleaseCollection
+    {
+        // Loop over items
+        $this->items = array_filter($this->items, function($value) use ($work, $tagged, $skip) {
+
+            // Create filter
+            $filter = new WorkTracksFilter();
+
+            // Set properties
+            $filter->setWork($work)->setRelease($value);
+
+            // Get collection
+            $collection = $value->backend()->worktracks($filter);
+
+            // Loop over collection
+            foreach ($collection as $value) if($value->trackrange() != 'SKIP' || $skip) return $tagged;
+
+            // Return inverse value
+            return !$tagged;
+        });
+
+        // Allow chaining
+        return $this;
+    }
 }

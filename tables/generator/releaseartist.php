@@ -2,6 +2,12 @@
 echo json_encode(array(
     'columns'   =>  array(
         array(
+            'name'              =>      'id',
+            'type'              =>      'int',
+            'null'              =>      false,
+            'auto_increment'    =>      true
+        ),
+        array(
             'name'              =>      'fk_release',
             'type'              =>      'int',
             'null'              =>      false
@@ -12,5 +18,5 @@ echo json_encode(array(
             'null'              =>      false
         ),
     ),
-    'primary'   =>  'fk_release, fk_artist',
+    'primary'   =>  'id',
 )) . PHP_EOL;

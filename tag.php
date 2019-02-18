@@ -16,16 +16,29 @@ $work = $backend->work(1);
 $releases = $backend->releases();
 
 // Filter releases
-$releases->hasTracksWithDuration()->hasYear();
+$releases->hasTracksWithDuration()->hasYear()->taggedForWork($work, false, true);
 
 // Loop over releases
 foreach ($releases as $r)
 {
+    // Skip first entries
+    // if ($r->ID() <= 400) continue;
+
     // Show info
-    echo "Release: {$r->title()} from {$r->year()}:" . PHP_EOL;
+    echo "Release {$r->ID()}: {$r->title()} from {$r->year()}:" . PHP_EOL;
 
     // Loop tracks
-    foreach ($r->tracks() as $index => $track) echo "{$index}: {$track->title()}" . PHP_EOL;
+    foreach ($r->tracks() as $index => $track) 
+    {
+        // String found?
+        if (strpos($track->title(), "1043") !== FALSE) echo "\033[1;31m";
+
+        // Show info
+        echo "{$index}: {$track->title()} - {$track->durationString()}" . PHP_EOL;
+
+        // Clear input
+        echo "\033[0m";
+    }
     
     // Show instructions
     echo PHP_EOL . "Enter the track range for work {$work->name()}:" . PHP_EOL;
@@ -46,6 +59,9 @@ foreach ($releases as $r)
     // No input
     else
     {
+        // Add entry
+        $work->createTrackRange($r, "SKIP");
+
         // Print
         echo "No track entry added.";
     }

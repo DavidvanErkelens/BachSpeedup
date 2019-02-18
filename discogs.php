@@ -19,7 +19,7 @@ $load = new AutoIncluder(__DIR__, array(__DIR__ . '/vendor'));
 use GuzzleHttp\Client;
 
 // Load urls to get
-$urls = array_map('trim', file(__DIR__ . '/urls3'));
+$urls = array_map('trim', file(__DIR__ . '/urls'));
 // $urls = array('https://api.discogs.com/releases/5914243');
 
 // Create client

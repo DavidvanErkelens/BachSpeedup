@@ -1,1 +1,1 @@
-{"columns":[{"name":"fk_release","type":"int","null":false},{"name":"fk_artist","type":"int","null":false}],"primary":"fk_release, fk_artist"}
+{"columns":[{"name":"id","type":"int","null":false,"auto_increment":true},{"name":"fk_release","type":"int","null":false},{"name":"fk_artist","type":"int","null":false}],"primary":"id"}

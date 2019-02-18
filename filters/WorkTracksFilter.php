@@ -21,4 +21,18 @@ class WorkTracksFilter extends Filter
         // Allow chaining
         return $this;
     }
+
+    /**
+     *  Set the release
+     *  @param  DiscogsRelease
+     *  @return WorkTracksFilter
+     */
+    public function setRelease(DiscogsRelease $release): WorkTracksFilter
+    {
+        // Set parameter
+        $this->addCondition('fk_release = ?', array($release->ID()));
+
+        // Allow chaining
+        return $this;
+    }
 }

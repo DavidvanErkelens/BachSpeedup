@@ -38,6 +38,9 @@ class Work extends Entity
             // Get release
             if (!$release = $wtracks->release()) continue;
 
+            // Only get releases that are longer than 10 mins
+            if ($wtracks->duration() < 10) continue;
+
             // Add data
             $result[] = array(
                 $release->year(),
@@ -68,8 +71,14 @@ class Work extends Entity
 
         foreach ($this->backend()->worktracks($filter) as $wtracks)
         {
+            // Skip?
+            if ($wtracks->trackrange() == 'SKIP') continue;
+
             // Get release
             if (!$release = $wtracks->release()) continue;
+
+            // Only get releases that are longer than 10 mins
+            if ($wtracks->duration() < 10) continue;
 
             // Already seen this year?
             if (!array_key_exists($release->year(), $result)) $result[$release->year()] = array();
@@ -128,6 +137,9 @@ class Work extends Entity
 
         foreach ($this->backend()->worktracks($filter) as $wtracks)
         {
+            // Skip?
+            if ($wtracks->trackrange() == 'SKIP') continue;
+
             // Get release
             if (!$release = $wtracks->release()) continue;
 

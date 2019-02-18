@@ -64,8 +64,8 @@ svg.selectAll("text")
     .append("text")
     .text(function(d) {
         // return d[1];
+        return "....(" + d[0] + " - " + d[1] + ")";
         return d[3] + " (" + d[0] + " - " + d[1] + ")";
-        return "(" + d[0] + " - " + d[1] + ")";
     })
     .attr("x", function(d) {
          return xScale(d[0]);

@@ -27,6 +27,9 @@ class WorkTracks extends Entity
      */
     public function trackIDs(): array
     {
+        // Should we skip?
+        if ($this->trackrange() == 'SKIP') return array();
+
         // Store result
         $result = array();
 
