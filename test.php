@@ -18,6 +18,8 @@ $backend = new Backend($config);
 // echo $x->duration();
 
 $work = $backend->work(1);
-$work->findDuplicates(true);
+// $work->findDuplicates(true);
 // echo $work->name() . PHP_EOL . PHP_EOL;
 // var_dump($work->plotData());
+
+var_dump($work->fitLine());

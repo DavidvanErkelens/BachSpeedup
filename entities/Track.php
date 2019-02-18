@@ -35,4 +35,14 @@ class Track extends Entity
         // Calculate and return value
         return $minutes + ($seconds / 60.0);
     }
+
+    /**
+     *  Get the title of this track
+     *  @return string
+     */
+    public function title(): string
+    {
+        // expose member
+        return $this->row->title;
+    }
 }

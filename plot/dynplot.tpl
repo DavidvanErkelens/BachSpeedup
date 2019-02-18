@@ -1,4 +1,12 @@
 var dataset = {$data|@json_encode}
+var regression = {$regression|@json_encode}
+// intercept + ($x * $gradient);
+
+var minyear = d3.min(dataset, function(d) { return d[0]; });
+var maxyear = d3.max(dataset, function(d) { return d[0]; });
+
+var startvalue = regression['intercept'] + (minyear * regression['slope']);
+var endvalue = regression['intercept'] + (maxyear * regression['slope']);
 
 // Set:
 // 0: year
@@ -56,8 +64,8 @@ svg.selectAll("text")
     .append("text")
     .text(function(d) {
         // return d[1];
+        return d[3] + " (" + d[0] + " - " + d[1] + ")";
         return "(" + d[0] + " - " + d[1] + ")";
-        //  return d[3] + " (" + d[0] + " - " + d[1] + ")";
     })
     .attr("x", function(d) {
          return xScale(d[0]);
@@ -77,6 +85,15 @@ var x_axis = d3.axisBottom()
 var y_axis = d3.axisRight()
     .scale(yScale)
     .ticks(10)
+
+var circle = svg.append("line")
+                        .attr("x1", xScale(minyear))
+                        .attr("x2", xScale(maxyear))
+                        .attr("y1", yScale(startvalue))
+                        .attr("y2", yScale(endvalue))
+                        .attr("stroke-width", 1)
+                        .attr("stroke", "black");
+
 
 //Append group and insert axis
 svg.append("g")

@@ -52,6 +52,67 @@ class Work extends Entity
     }
 
     /**
+     *  Fit a line though the data points
+     *  @return ???
+     */
+    public function fitLine()
+    {
+        // @see https://halfelf.org/2017/linear-regressions-php/
+
+        // Array to store everything in
+        $result = array();
+
+        // Create filter and set work
+        $filter = WorkTracksFilter::create();
+        $filter->setWork($this);
+
+        foreach ($this->backend()->worktracks($filter) as $wtracks)
+        {
+            // Get release
+            if (!$release = $wtracks->release()) continue;
+
+            // Already seen this year?
+            if (!array_key_exists($release->year(), $result)) $result[$release->year()] = array();
+
+            // Add data
+            $result[$release->year()][] = $wtracks->duration();
+        }
+
+        // Create averages
+        foreach ($result as $year => $releases)
+        {
+            // Average for year
+            $result[$year] = array_sum($releases) / count($releases);
+        }
+
+        $x = array_keys($result);
+        $y = array_values($result);
+
+        $n     = count($x);     // number of items in the array
+        $x_sum = array_sum($x); // sum of all X values
+        $y_sum = array_sum($y); // sum of all Y values
+     
+        $xx_sum = 0;
+        $xy_sum = 0;
+     
+        for($i = 0; $i < $n; $i++) {
+            $xy_sum += ( $x[$i]*$y[$i] );
+            $xx_sum += ( $x[$i]*$x[$i] );
+        }
+     
+        // Slope
+        $slope = ( ( $n * $xy_sum ) - ( $x_sum * $y_sum ) ) / ( ( $n * $xx_sum ) - ( $x_sum * $x_sum ) );
+     
+        // calculate intercept
+        $intercept = ( $y_sum - ( $slope * $x_sum ) ) / $n;
+     
+        return array( 
+            'slope'     => $slope,
+            'intercept' => $intercept,
+        );
+    }
+
+    /**
      *  Find duplicates in this works (only checked indexed entries)
      *  @param  bool        print in the meanwhile
      *  @return array
@@ -100,7 +161,7 @@ class Work extends Entity
                 {
                     // Statement
                     echo "The following releases are {$duration} long and released in {$year}:" . PHP_EOL;
-                    foreach ($releases as $r) echo $r->title() . PHP_EOL;
+                    foreach ($releases as $r) echo "{$r->title()} | ID: {$r->ID()}". PHP_EOL;
                     
                     // Extra newline
                     print PHP_EOL;
@@ -113,5 +174,27 @@ class Work extends Entity
 
         // Return result
         return $possibles;
+    }
+
+    /**
+     *  Create a trackrange for this work
+     *  @param  DiscogsRelease
+     *  @param  string              the range
+     *  @return WorkTracks
+     */
+    public function createTrackRange(DiscogsRelease $release, string $range): WorkTracks
+    {
+        // Insert item
+        $entity = $this->backend()->sql()->create('WorkTracks', array(
+            'fk_work'       =>  $this->ID(),
+            'fk_release'    =>  $release->ID(),
+            'trackrange'    =>  $range
+        ));
+
+        // Set backend
+        $entity->setBackend($this->backend());
+
+        // Done
+        return $entity;
     }
 }

@@ -149,4 +149,20 @@ class DiscogsRelease extends Entity
         // Noting found
         return null;
     }
+
+    /**
+     *  Get all tracks in this release
+     *  @return TrackCollection
+     */
+    public function tracks(): TrackCollection
+    {
+        // Create track filter
+        $filter = new TrackFilter();
+
+        // Set properties
+        $filter->setRelease($this);
+
+        // Return
+        return $this->backend()->tracks($filter);
+    }
 }

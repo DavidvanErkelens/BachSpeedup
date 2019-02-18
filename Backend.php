@@ -114,6 +114,17 @@ class Backend
         // Pass on to sql
         return $this->sql()->getCollection('WorkTracks', $filter)->setBackend($this);
     }
+
+    /**
+     *  Get releases
+     *  @param  DiscogsReleaseFilter
+     *  @return DiscogsReleaseCollection
+     */
+    public function releases(DiscogsReleaseFilter $filter = null): DiscogsReleaseCollection
+    {
+        // Pass on to sql
+        return $this->sql()->getCollection('DiscogsRelease', $filter)->setBackend($this);
+    }
     
     /**
      *  Get tracks 

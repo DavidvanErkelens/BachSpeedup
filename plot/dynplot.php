@@ -9,20 +9,17 @@ $load = new AutoIncluder(__DIR__ . '/..', array(__DIR__ . '/../vendor'));
 // Create backend
 $backend = new Backend($config);
 
-// $x = $backend->worktrack(1);
-
-// var_dump($x->trackIDs());
-
-// $x = $backend->track(81);
-
-// echo $x->duration();
-
+// Use Smarty object to pass data to front end
 $smarty = new Smarty();
 
-
+// Fetch work (now in DB: 1 = BWV1043, 2 = BWV1043 - Vivace)
 $work = $backend->work(1);
-// echo $work->name() . PHP_EOL . PHP_EOL;
-// var_dump($work->plotData());
+
+// Add data
 $smarty->assign('data', $work->plotData());
 
+// Add linear regression params
+$smarty->assign('regression', $work->fitLine());
+
+// Show the plot
 $smarty->display('dynplot.tpl');
