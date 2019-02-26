@@ -21,8 +21,11 @@ $releases->hasTracksWithDuration()->hasYear()->taggedForWork($work, false, true)
 // How much releases do we have to tag?
 $totag = count($releases);
 
+// If we're a multiple of 2, add 1 to make sure in cases of 1000 we get 4 instead of 3
+$totagsafe = ($totag % 2 == 0) ? $totag + 1 : $totag;
+
 // Format length of releases to tag
-$totaglength = ceil(log10($totag));
+$totaglength = ceil(log10($totagsafe));
 
 // Store counter
 $c = 0;
