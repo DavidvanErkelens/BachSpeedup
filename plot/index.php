@@ -12,20 +12,21 @@ $backend = new Backend($config);
 // Use Smarty object to pass data to front end
 $smarty = new Smarty();
 
-// Get ID
-$id = $_GET['work'];
+// Get work ID
+$wid = $_GET['work'];
+
+// Number?
+if (!is_numeric($wid)) $wid = 1;
 
 // Fetch work
-$work = $backend->work($id);
+$work = $backend->work($wid);
 
-// Add data
-$smarty->assign('data', $work->plotData());
-
-// Add linear regression params
-$smarty->assign('regression', $work->fitLine());
+// Exists?
+if ($work === NULL) $work = $backend->work(1);
 
 // Assign work name
 $smarty->assign('work', $work->name());
+$smarty->assign('workid', $work->ID());
 
 // Show the plot
-$smarty->display('dynplot.tpl');
+$smarty->display('index.tpl');

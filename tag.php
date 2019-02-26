@@ -10,20 +10,26 @@ $load = new AutoIncluder(__DIR__, array(__DIR__ . '/vendor'));
 $backend = new Backend($config);
 
 // The work we're dealing with
-$work = $backend->work(1);
+$work = $backend->work(9);
 
 // Get releases
 $releases = $backend->releases();
 
 // Filter releases
-$releases->hasTracksWithDuration()->hasYear()->taggedForWork($work, false, true);
+$releases->hasTracksWithDuration()->hasYear()->taggedForWork($work, false, true)->downloadedForWork($work);
+
+// How much releases do we have to tag?
+$totag = count($releases);
+
+// Format length of releases to tag
+$totaglength = ceil(log10($totag));
+
+// Store counter
+$c = 0;
 
 // Loop over releases
 foreach ($releases as $r)
 {
-    // Skip first entries
-    // if ($r->ID() <= 400) continue;
-
     // Show info
     echo "Release {$r->ID()}: {$r->title()} from {$r->year()}:" . PHP_EOL;
 
@@ -31,7 +37,7 @@ foreach ($releases as $r)
     foreach ($r->tracks() as $index => $track) 
     {
         // String found?
-        if (strpos($track->title(), "1043") !== FALSE) echo "\033[1;31m";
+        if (strpos($track->title(), $work->query()) !== FALSE) echo "\033[1;31m";
 
         // Show info
         echo "{$index}: {$track->title()} - {$track->durationString()}" . PHP_EOL;
@@ -43,8 +49,11 @@ foreach ($releases as $r)
     // Show instructions
     echo PHP_EOL . "Enter the track range for work {$work->name()}:" . PHP_EOL;
 
+    // Format showcounter
+    $show = str_pad(($c + 1), $totaglength, '0', STR_PAD_LEFT);
+
     // Read input
-    $line = readline('> ');
+    $line = readline("[{$show}/{$totag}] > ");
 
     // Input?
     if (strlen($line) > 0)
@@ -65,6 +74,9 @@ foreach ($releases as $r)
         // Print
         echo "No track entry added.";
     }
+
+    // Increment counter
+    $c += 1;
 
     // Show line
     echo PHP_EOL . str_repeat('-', 50) . PHP_EOL . PHP_EOL;

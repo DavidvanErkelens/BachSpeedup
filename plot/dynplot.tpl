@@ -103,3 +103,8 @@ svg.append("g")
     svg.append("g")
     .attr("transform", "translate(10, 20)")
     .call(y_axis);
+
+
+$( document ).ready(function() {
+    $("h1#title").text("Work: {$work}");
+});

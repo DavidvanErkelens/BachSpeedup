@@ -18,10 +18,6 @@ $load = new AutoIncluder(__DIR__, array(__DIR__ . '/vendor'));
 // Use Guzzle
 use GuzzleHttp\Client;
 
-// Load urls to get
-$urls = array_map('trim', file(__DIR__ . '/urls'));
-// $urls = array('https://api.discogs.com/releases/5914243');
-
 // Create client
 $client = new Client(['headers' => ['User-Agent' => 'BachSpeedup/0.1']]);
 
@@ -31,8 +27,21 @@ $backend = new Backend($config);
 // Print newline
 echo PHP_EOL;
 
+// The work we're downloading for
+$work = $backend->work(9);
+
+// Load urls to get
+$urls = array_map('trim', file(__DIR__ . "/bwv{$work->query()}urls"));
+// $urls = array('https://api.discogs.com/releases/4586492');
+
 // Get total
 $total = count($urls);
+
+// Confirm
+$string = "About to import {$total} URLs for work {$work->name()}. Press enter to continue...";
+
+// Prompt
+readline($string);
 
 // Loop over URLs
 foreach ($urls as $i => $url)
@@ -40,7 +49,21 @@ foreach ($urls as $i => $url)
     // Show message
     echo "\rProcessing {$url} [{$i}/{$total}]";
 
-    // This can trhow
+    // Create filter
+    $filter = new DiscogsReleaseFilter;
+    $filter->setUrl($url);
+
+    // Loop over results
+    foreach ($backend->releases($filter) as $release)
+    {
+        // Add this release to the work
+        $work->addDownloadedRelease($release);
+
+        // Move on
+        continue 2;
+    }
+
+    // This can throw
     try
     {
         // Get data
@@ -86,32 +109,42 @@ foreach ($urls as $i => $url)
         'thumbnail' =>  ($thumbnail)
     );
 
-    // create release
-    $release = $backend->createRelease($params);
-
-    // Loop over artists
-    foreach ($data['artists'] as $artist)
+    // Hacky hacky hacky
+    try
     {
-        // Get parameters
-        $name = ($artist['name']);
-        $id = ($artist['id']);
-
-        // Set items
-        $release->addArtist($name, $id);
+        // create release
+        $release = $backend->createRelease($params);
+    
+        // Loop over artists
+        foreach ($data['artists'] as $artist)
+        {
+            // Get parameters
+            $name = ($artist['name']);
+            $id = ($artist['id']);
+    
+            // Set items
+            $release->addArtist($name, $id);
+        }
+    
+        // Loop over tracks
+        foreach ($data['tracklist'] as $track)
+        {
+            // Get parameters
+            $duration = ($track['duration']);
+            $pos = ($track['position']);
+            $type = ($track['type_']);
+            $title = ($track['title']);
+    
+            // Add to release
+            $release->addTrack($duration, $pos, $type, $title);
+        }
+    
+        // Add release to the work
+        $work->addDownloadedRelease($release);
     }
 
-    // Loop over tracks
-    foreach ($data['tracklist'] as $track)
-    {
-        // Get parameters
-        $duration = ($track['duration']);
-        $pos = ($track['position']);
-        $type = ($track['type_']);
-        $title = ($track['title']);
-
-        // Add to release
-        $release->addTrack($duration, $pos, $type, $title);
-    }
+    // We'll just ignore things that go wrong
+    catch (Exception $e) {}
 
     // Wait a small time (exact amount for 25 requests / minute)
     usleep(2400000);

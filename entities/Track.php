@@ -16,6 +16,9 @@ class Track extends Entity
      */ 
     public function durationString(): string
     {
+        // Is there a ':'?
+        if (strpos($this->row->duration, ':') === FALSE) return '';
+
         // Expose member
         return $this->row->duration;
     }

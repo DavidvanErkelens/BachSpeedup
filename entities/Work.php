@@ -21,10 +21,22 @@ class Work extends Entity
     }
 
     /**
+     *  Return the search query
+     *  @return string
+     */
+    public function query(): string
+    {
+        // expose member
+        return $this->row->query;
+    }
+
+    /**
      *  Format everything about this work so that it can be plotted
+     *  @param  int
+     *  @param  int
      *  @return array
      */
-    public function plotData(): array
+    public function plotData(int $startyear = 0, int $endyear = 2100): array
     {
         // Array to store everything in
         $result = array();
@@ -35,8 +47,14 @@ class Work extends Entity
 
         foreach ($this->backend()->worktracks($filter) as $wtracks)
         {
+            // Skip?
+            if ($wtracks->trackrange() == 'SKIP') continue;
+
             // Get release
             if (!$release = $wtracks->release()) continue;
+
+            // In range?
+            if ($release->year() < $startyear || $release->year() > $endyear) continue;
 
             // Only get releases that are longer than 10 mins
             if ($wtracks->duration() < 10) continue;
@@ -56,9 +74,11 @@ class Work extends Entity
 
     /**
      *  Fit a line though the data points
-     *  @return ???
+     *  @param  int
+     *  @param  int
+     *  @return array
      */
-    public function fitLine()
+    public function fitLine(int $startyear = 0, int $endyear = 2100): array
     {
         // @see https://halfelf.org/2017/linear-regressions-php/
 
@@ -76,6 +96,9 @@ class Work extends Entity
 
             // Get release
             if (!$release = $wtracks->release()) continue;
+
+            // In range?
+            if ($release->year() < $startyear || $release->year() > $endyear) continue;
 
             // Only get releases that are longer than 10 mins
             if ($wtracks->duration() < 10) continue;
@@ -201,6 +224,26 @@ class Work extends Entity
             'fk_work'       =>  $this->ID(),
             'fk_release'    =>  $release->ID(),
             'trackrange'    =>  $range
+        ));
+
+        // Set backend
+        $entity->setBackend($this->backend());
+
+        // Done
+        return $entity;
+    }
+
+    /**
+     *  Add a downloaded release to this work
+     *  @param  DiscogsRelease
+     *  @return WorkReleases
+     */
+    public function addDownloadedRelease(DiscogsRelease $release): WorkReleases
+    {
+        // Insert item
+        $entity = $this->backend()->sql()->create('WorkReleases', array(
+            'fk_work'       =>  $this->ID(),
+            'fk_release'    =>  $release->ID()
         ));
 
         // Set backend

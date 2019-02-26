@@ -8,16 +8,15 @@ echo json_encode(array(
             'auto_increment'    =>      true
         ),
         array(
-            'name'              =>      'name',
-            'type'              =>      'text',
+            'name'              =>      'fk_work',
+            'type'              =>      'int',
             'null'              =>      false
         ),
-
         array(
-            'name'              =>      'query',
-            'type'              =>      'text',
+            'name'              =>      'fk_release',
+            'type'              =>      'int',
             'null'              =>      false
-        ),
+        )
     ),
     'primary'   =>  'id',
 )) . PHP_EOL;

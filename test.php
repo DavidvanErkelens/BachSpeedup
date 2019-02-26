@@ -17,9 +17,18 @@ $backend = new Backend($config);
 
 // echo $x->duration();
 
-$work = $backend->work(1);
+// $work = $backend->work(6);
 // $work->findDuplicates(true);
 // echo $work->name() . PHP_EOL . PHP_EOL;
 // var_dump($work->plotData());
 
-var_dump($work->fitLine());
+// var_dump($work->fitLine());
+
+
+
+$tracks = array(2225, 2244, 2315, 2321, 2333, 2368, 2388, 2406, 2408, 2433, 2473);
+
+foreach ($tracks as $t) {
+    $r = $backend->worktrack($t);
+    echo "{$t}: {$r->durationString()}" . PHP_EOL;
+}

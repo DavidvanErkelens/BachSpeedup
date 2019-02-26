@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     d = discogs_client.Client('BachSpeedup/0.1', user_token=config['discogs_config']['usertoken'])
     
-    results = d.search('BWV 1043', type='release')
+    results = d.search('BWV 1051', type='release')
 
     i = 0
 

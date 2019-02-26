@@ -1,2 +1,6 @@
 # Composer
 vendor/
+*.sql
+bwv*urls
+results/
+url*

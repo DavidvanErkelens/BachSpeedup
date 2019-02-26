@@ -83,4 +83,65 @@ class DiscogsReleaseCollection extends Collection
         // Allow chaining
         return $this;
     }
+
+    /**
+     *  Filter releases that were downloaded for a certain work
+     *  @param  Work
+     *  @param  boolean
+     *  @return DiscogsReleaseCollection
+     */
+    public function downloadedForWork(Work $work, bool $forwork = true): DiscogsReleaseCollection
+    {
+        // Create filter
+        $filter = new WorkReleasesFilter();
+
+        // Set work
+        $filter->setWork($work);
+
+        // Create array
+        $releases = array();
+
+        // Backend pointer
+        $backend = array_values($this->items)[0]->backend();
+
+        // Get the downloads for this work
+        if (count($this->items) > 0) foreach ($backend->sql()->getCollection('WorkReleases', $filter) as $r) 
+        {
+            // Backend hack
+            $r->setBackend($backend);
+
+            // Store ID
+            $releases[] = $r->release()->ID();
+        }
+
+        // Loop over items
+        $this->items = array_filter($this->items, function ($value) use ($forwork, $releases) {
+            
+            if (in_array($value->ID(), $releases)) return $forwork;
+            return !$forwork;
+            
+        });
+        
+        // Allow chaining
+        return $this;
+    }
+
+    /**
+     *  Set the range for the releases to be included
+     *  @param  int     start year
+     *  @param  int     end year
+     *  @return DiscogsReleaseCollection
+     */
+    public function range(int $start, int $end): DiscogsReleaseCollection
+    {
+        // Loop over items
+        $this->items = array_filter($this->items, function($value) use ($start, $end) {
+
+            // Check requirements
+            return $value->year() >= $start && $value->year() <= $end;
+        });
+
+        // Allow chaining
+        return $this;
+    }
 }
