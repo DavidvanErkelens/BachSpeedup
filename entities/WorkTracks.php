@@ -152,7 +152,8 @@ class WorkTracks extends Entity
             // Add to total
             $tracks[] = array(
                 'title'     =>    $element->title(),
-                'num'       =>    $track
+                'num'       =>    $track,
+                'duration'  =>    $element->durationString()
             );
         }
 

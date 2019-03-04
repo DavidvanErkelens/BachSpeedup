@@ -8,9 +8,14 @@ var startvalue = regression['intercept'] + (minyear * regression['slope']);
 var endvalue = regression['intercept'] + (maxyear * regression['slope']);
 
 
-var w = 1800;
-var h = 900;
+var windowwidth = window.innerWidth;
+var windowheight = window.innerHeight;
 
+var marginwidth = 50;
+var marginheight = 50;
+
+var w = windowwidth - (2 * marginwidth);
+var h = windowheight - (2 * marginheight);
 
 
 //Create SVG element
@@ -19,12 +24,13 @@ var svg = d3.select("body")
     .attr("width", w)
     .attr("height", h);
 
+
 var xScale = d3.scaleLinear()
     .domain([
-        d3.min(dataset, function(d) { return d.year; }) - 10, 
-        d3.max(dataset, function(d) { return d.year; }) + 10
+        d3.min(dataset, function(d) { return d.year; }) - 5, 
+        d3.max(dataset, function(d) { return d.year; }) + 5
     ])
-    .range([0, w]);
+    .range([marginwidth, w - marginwidth]);
 
 
 var yScale = d3.scaleLinear()
@@ -32,7 +38,7 @@ var yScale = d3.scaleLinear()
         d3.max(dataset, function(d) { return d.duration; }) + 1,
         d3.min(dataset, function(d) { return d.duration; }) - 1
     ])
-    .range([0, h])
+    .range([marginheight, h - marginheight])
 
 svg.selectAll("circle")
     .data(dataset)
@@ -52,13 +58,14 @@ svg.selectAll("circle")
     .on("mouseover", handleMouseOver);
 
 // Add scales to axis
-var x_axis = d3.axisBottom()
+var x_axis = d3.axisTop()
     .scale(xScale)
-    .ticks(15);
+    .ticks(15, "d");
 
 var y_axis = d3.axisRight()
     .scale(yScale)
     .ticks(10)
+    .tickFormat(d => d + ":00");
 
 svg.append("line")
     .attr("x1", xScale(minyear))
@@ -71,12 +78,32 @@ svg.append("line")
 
 //Append group and insert axis
 svg.append("g")
-    .attr("transform", "translate(10, "  + (h - 20) + ")")
+    .attr("transform", "translate(0, "  + (h - marginheight) + ")")
     .call(x_axis);
 
     svg.append("g")
-    .attr("transform", "translate(10, 20)")
+    .attr("transform", "translate(" + marginwidth + ", 0)")
     .call(y_axis);
+
+
+svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", 0 - (h / 2))
+      .attr("y", marginwidth / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .style("font-family", "Arial")
+      .style("font-size", 12)
+      .text("Total duration");
+
+svg.append("text")
+    .attr("x", w/2)
+    .attr("y", h - (marginheight / 2 ))
+    .attr("text-anchor", "middle")
+    .style("text-anchor", "middle")
+    .style("font-family", "Arial")
+    .style("font-size", 12)
+    .text("Year of release");
 
 
 $( document ).ready(function() {

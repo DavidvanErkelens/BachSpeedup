@@ -58,7 +58,7 @@ class Work extends Entity
             if (!$release = $wtracks->release()) continue;
 
             // filter on quality
-            if (strpos('Correct', $release->quality()) === FALSE) continue;
+            // if (strpos('Correct', $release->quality()) === FALSE) continue;
 
             // Longer than 0 minutes?
             if ($wtracks->duration() == 0) continue;
@@ -104,6 +104,16 @@ class Work extends Entity
                 'infobox'       =>  $wtracks->infobox()
             );
         }
+
+        // Add test unit
+        // $result[] = array(
+        //     'year'          =>  1950,
+        //     'durationstr'   =>  "10:00",
+        //     'duration'      =>  10,
+        //     'title'         =>  "bac",
+        //     'color'         =>  $colors->map("Unknown"),
+        //     'infobox'       =>  "testunit"
+        // );
 
         // Return result
         return $result;

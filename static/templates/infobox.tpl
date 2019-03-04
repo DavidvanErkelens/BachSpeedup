@@ -1,4 +1,4 @@
-<b>Name:</b> {$name|truncate:30} <br />
+<b>Name:</b> {$name|truncate:50} <br />
 <b>Duration:</b> {$duration} <br />
 <b>Country:</b> {$country} <br />
 <b>Format: </b> {$format} <br />
@@ -7,7 +7,7 @@
 <hr>
 <b>Tracks for calculation:</b> <br />
 {foreach from=$tracks item=$track}
-{$track.num}: {$track.title|truncate:20} <br />
+{$track.num}: {$track.title|truncate:50} ({$track.duration})<br />
 {/foreach}
 <hr>
 <b>Internal release ID:</b> {$id} <br />
