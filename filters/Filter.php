@@ -26,4 +26,32 @@ abstract class Filter extends SqlFramework\Filter
         // Otherwise just return it
         return $filter;
     }
+
+    /**
+     *  Limit the IDs
+     *  @param  string      the subquery
+     *  @return Filter
+     */
+    public function limitIDs(string $subquery): Filter
+    {
+        // Set property
+        $this->addCondition("id in ({$subquery})");
+
+        // Allow chaining
+        return $this;
+    }
+
+    /**
+     *  Add a subquery
+     *  @param  string
+     *  @return Filter 
+     */
+    public function addSubquery(string $subquery): Filter
+    {
+        // Set property
+        $this->addCondition($subquery);
+
+        // Allow chaining
+        return $this;
+    }
 }

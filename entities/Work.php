@@ -11,6 +11,13 @@
 class Work extends Entity
 {
     /**
+     *  The worktracks we've fetched
+     *  @var array
+     */
+    private $tracks = null;
+
+
+    /**
      *  Expose the name
      *  @return string
      */
@@ -31,6 +38,37 @@ class Work extends Entity
     }
 
     /**
+     *  Helper function to get the associated tracks
+     */
+    private function getTracks(): void
+    {
+        // Already set?
+        if (!is_null($this->tracks)) return;
+
+        // Store values
+        $this->tracks = array();
+
+        // Create filter and set work
+        $filter = WorkTracksFilter::create();
+        $filter->setWork($this)->excludeSkip();
+
+        foreach ($this->backend()->worktracks($filter) as $wtracks)
+        {
+            // Get release
+            if (!$release = $wtracks->release()) continue;
+
+            // filter on quality
+            if (strpos('Correct', $release->quality()) === FALSE) continue;
+
+            // Longer than 0 minutes?
+            if ($wtracks->duration() == 0) continue;
+
+            // Add to array
+            $this->tracks[] = $wtracks;
+        }
+    }
+
+    /**
      *  Format everything about this work so that it can be plotted
      *  @param  int
      *  @param  int
@@ -41,30 +79,29 @@ class Work extends Entity
         // Array to store everything in
         $result = array();
 
-        // Create filter and set work
-        $filter = WorkTracksFilter::create();
-        $filter->setWork($this);
+        // Create color object
+        $colors = new Colors(array('Unknown'));
 
-        foreach ($this->backend()->worktracks($filter) as $wtracks)
+        // Do we have to fetch the tracks?
+        if (is_null($this->tracks)) $this->getTracks();
+
+        // Loop over tracks
+        foreach ($this->tracks as $wtracks)
         {
-            // Skip?
-            if ($wtracks->trackrange() == 'SKIP') continue;
-
             // Get release
             if (!$release = $wtracks->release()) continue;
 
             // In range?
             if ($release->year() < $startyear || $release->year() > $endyear) continue;
 
-            // Only get releases that are longer than 10 mins
-            if ($wtracks->duration() < 10) continue;
-
             // Add data
             $result[] = array(
-                $release->year(),
-                $wtracks->durationString(),
-                $wtracks->duration(),
-                $release->title()
+                'year'          =>  $release->year(),
+                'durationstr'   =>  $wtracks->durationString(),
+                'duration'      =>  $wtracks->duration(),
+                'title'         =>  $release->title(),
+                'color'         =>  $colors->map($release->format()),
+                'infobox'       =>  $wtracks->infobox()
             );
         }
 
@@ -85,23 +122,17 @@ class Work extends Entity
         // Array to store everything in
         $result = array();
 
-        // Create filter and set work
-        $filter = WorkTracksFilter::create();
-        $filter->setWork($this);
+        // Do we have to fetch the tracks?
+        if (is_null($this->tracks)) $this->getTracks();
 
-        foreach ($this->backend()->worktracks($filter) as $wtracks)
+        // Looperdieloop
+        foreach ($this->tracks as $wtracks)
         {
-            // Skip?
-            if ($wtracks->trackrange() == 'SKIP') continue;
-
             // Get release
             if (!$release = $wtracks->release()) continue;
 
             // In range?
             if ($release->year() < $startyear || $release->year() > $endyear) continue;
-
-            // Only get releases that are longer than 10 mins
-            if ($wtracks->duration() < 10) continue;
 
             // Already seen this year?
             if (!array_key_exists($release->year(), $result)) $result[$release->year()] = array();

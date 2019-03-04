@@ -1,0 +1,8 @@
+div#desc {
+    position: fixed;
+    right:10px;
+    bottom:10px;
+    border: 1px solid #000;
+    background-color: #FFF;
+    padding:10px;
+}

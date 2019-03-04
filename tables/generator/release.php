@@ -37,6 +37,16 @@ echo json_encode(array(
             'name'              =>      'master',
             'type'              =>      'varchar(255)',
             'null'              =>      false
+        ),
+        array(
+            'name'              =>      'country',
+            'type'              =>      'varchar(255)',
+            'null'              =>      false
+        ),
+        array(
+            'name'              =>      'format',
+            'type'              =>      'varchar(255)',
+            'null'              =>      false
         )
     ),
     'primary'   =>  'id',

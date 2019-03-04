@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <title>Bach: {$work}</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
   <h1 id="title">Loading data for {$work}</h1>
+  <div id="desc"></div>
   </body>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-scale.v2.min.js"></script>

@@ -117,4 +117,82 @@ class WorkTracks extends Entity
         // Format string
         return "{$minutes}:{$seconds}";
     }
+
+    /**
+     *  Format the infobox for this entry
+     *  @return  string
+     */
+    public function infobox(): string
+    {
+        // Create smarty object
+        $parser = new Smarty;
+
+        // Get the release
+        $release = $this->release();
+
+        // Assign parameters
+        $parser->assign("name", $release->title());
+        $parser->assign("duration", $this->durationString());
+        $parser->assign("id", $release->ID());
+        $parser->assign("tid", $this->ID());
+        $parser->assign("year", $release->year());
+        $parser->assign("country", $release->country());
+        $parser->assign("format", $release->format());
+        $parser->assign("quality", $release->quality());
+
+        // Create track variable
+        $tracks = array();
+
+        // Loop over tracks
+        foreach ($this->trackIDs() as $track)
+        {
+            // Get the track entry
+            if (!$element = $release->trackByID($track)) continue;
+
+            // Add to total
+            $tracks[] = array(
+                'title'     =>    $element->title(),
+                'num'       =>    $track
+            );
+        }
+
+        // Add to parser
+        $parser->assign("tracks", $tracks);
+
+        // Format template location
+        $loc = __DIR__ . "/../static/templates/infobox.tpl";
+
+        // Fetch it
+        return $parser->fetch($loc);
+    }
+
+    /**
+     *  Get the tracks used for calculation 
+     *  @param  int         margin
+     *  @return array
+     */
+    private function usedTracks($margin = 1): array
+    {
+        // // store in array
+        // $range = array();
+
+        // // Get the range
+        // $dbrange = $this->trackIDs();
+
+        // // Loop over items in range
+        // foreach ($dbrange as $item)
+        // {
+        //     // Make sure item is set
+        //     $range[$item] = array(
+        //         'value' =>  
+        //     );
+
+        //     // Loop over range
+        //     for ($x = $item - $margin; $x < $item + $margin + 1; $x ++)
+        //     {
+        //         // Make sure item is valid and is in array
+        //         if (!in_array)
+        //     }
+        // }
+    }
 }

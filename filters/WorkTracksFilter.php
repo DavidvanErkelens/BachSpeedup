@@ -35,4 +35,17 @@ class WorkTracksFilter extends Filter
         // Allow chaining
         return $this;
     }
+
+    /**
+     *  Set trackrange to not skip
+     *  @return WorkTracksFilter
+     */
+    public function excludeSkip(): WorkTracksFilter
+    {
+        // Set parameter
+        $this->addCondition('trackrange <> "SKIP"');
+
+        // Allow chaining
+        return $this;
+    }
 }

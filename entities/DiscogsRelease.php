@@ -29,6 +29,74 @@ class DiscogsRelease extends Entity
         // expose member
         return $this->row->year;
     }
+    
+    /**
+     *  Get the url of the release
+     *  @return string
+     */
+    public function url(): string
+    {
+        // expose member
+        return $this->row->url;
+    }  
+    
+    /**
+     *  Get the quality of the release
+     *  @return string
+     */
+    public function quality(): string
+    {
+        // expose member
+        return $this->row->quality;
+    }  
+    
+    /**
+     *  Get the country of the release
+     *  @return string
+     */
+    public function country(): string
+    {
+        // expose member
+        return $this->row->country;
+    }
+
+    /**
+     *  Set the country of the release
+     *  @param  string
+     *  @return DiscogsRelease
+     */
+    public function setCountry(string $country): DiscogsRelease
+    {
+        // Set member
+        $this->row->country = $country;
+
+        // Allow chaining
+        return $this;
+    }
+
+    /**
+     *  Get the format of the release
+     *  @return string
+     */
+    public function format(): string
+    {
+        // expose member
+        return $this->row->format;
+    }
+
+    /**
+     *  Set the format of the release
+     *  @param  string
+     *  @return DiscogsRelease
+     */
+    public function setFormat(string $format): DiscogsRelease
+    {
+        // Set member
+        $this->row->format = $format;
+
+        // Allow chaining
+        return $this;
+    }
 
     /**
      *  Add a track to this release
