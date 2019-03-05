@@ -1,4 +1,5 @@
 var dataset = {$data|@json_encode}
+var dataset_complete = dataset;
 var regression = {$regression|@json_encode}
 
 var minyear = d3.min(dataset, function(d) { return d.year; });
@@ -108,7 +109,53 @@ svg.append("text")
 
 $( document ).ready(function() {
     $("h1#title").text("Work: {$work}");
+    addFilters();
 });
+
+function filter() {
+    countries = [];
+
+    $("input:checkbox[name=country]:checked").each(function(){
+        countries.push($(this).val());
+    });
+
+    var newdataset = dataset.filter(function (e) {
+        return countries.includes(e.country);
+    });
+
+
+    circle = svg.selectAll("circle").data(newdataset);
+    circle.exit().remove();
+    circle.enter().append("circle")
+    .attr("cx", function(d) {
+        return xScale(d.year);
+    })
+    .attr("cy", function(d) {
+        return yScale(d.duration);
+    })
+    .attr("r", 5)
+    .attr("fill", function(d) {
+        return d.color;
+    })
+    .attr("stroke", "black")
+    .on("mouseover", handleMouseOver);
+
+
+}
+
+function addFilters() {
+    var countries = [];
+    for (var i = 0; i < dataset.length; i++)
+    {
+        if (!countries.includes(dataset[i].country))
+        {
+            c = dataset[i].country;
+            console.log(c);
+            countries.push(c);
+            $("div#filter-country").append('<input type="checkbox" name="country" value="'+c+'" checked>'+c+'</input> <br / >');
+        }
+    }
+}
 
 // Create Event Handlers for mouse
 function handleMouseOver(d, i) {  

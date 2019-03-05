@@ -10,6 +10,14 @@
   <body>
   <center><h1 id="title">Loading data for {$work}</h1></center>
   <div id="desc"></div>
+  <div id="filter">
+    <h3>Filters</h3>
+    <div id="filter-country">
+      <b>Country</b><br />
+    </div>
+
+    <button onClick="filter();">Filter</button>
+  </div>
   </body>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-scale.v2.min.js"></script>

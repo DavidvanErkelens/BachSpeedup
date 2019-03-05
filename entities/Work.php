@@ -101,7 +101,8 @@ class Work extends Entity
                 'duration'      =>  $wtracks->duration(),
                 'title'         =>  $release->title(),
                 'color'         =>  $colors->map($release->format()),
-                'infobox'       =>  $wtracks->infobox()
+                'infobox'       =>  $wtracks->infobox(),
+                'country'       =>  $release->country()
             );
         }
 
